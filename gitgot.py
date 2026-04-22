@@ -513,9 +513,9 @@ def main():
 
     if args.url:
         g = github.Github(base_url=args.url + "/api/v3",
-                          login_or_token=ACCESS_TOKEN)
+                          auth=github.Auth.Token(ACCESS_TOKEN))
     else:
-        g = github.Github(ACCESS_TOKEN)
+        g = github.Github(auth=github.Auth.Token(ACCESS_TOKEN))
 
 
     if state.is_gist:
