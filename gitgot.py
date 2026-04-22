@@ -7,8 +7,7 @@ import json
 import re
 import requests
 import sys
-import ssdeep
-import sre_constants
+import ppdeep as ssdeep
 import os
 import os.path
 import urllib.parse
@@ -398,7 +397,7 @@ def regex_validator(args, state):
                 continue
             try:
                 re.subn(line, r'\1', "Expression test")
-            except sre_constants.error as e:
+            except re.error as e:
                 print(bcolors.FAIL + "Invalid Regular expression:\n\t" + line)
                 if "group" in str(e):
                     print(
