@@ -1,0 +1,15 @@
+# uv / virtual environments
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+
+# GitGot runtime output
+logs/*
+!logs/.gitkeep
+states/*
+!states/.gitkeep

@@ -1,0 +1,19 @@
+[project]
+name = "gitgot"
+version = "1.2.0"
+description = "Semi-automated, feedback-driven tool to rapidly search public GitHub data for sensitive secrets."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "LGPL-3.0-or-later"
+dependencies = [
+    "beautifulsoup4",
+    "PyGithub",
+    "ppdeep",
+]
+
+# GitGot is run in place from its own directory (logs/ and states/ are written
+# relative to the working directory, checks/ relative to the script). It is an
+# application, not a distributable library, so uv manages the locked dependency
+# environment without building/installing the project itself.
+[tool.uv]
+package = false

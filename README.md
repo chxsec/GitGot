@@ -27,23 +27,36 @@ Read more about the semi-automated, human-in-the-loop design here: https://bisho
 
 ## Install Instructions
 
-### Manual Instructions
+### Install with uv (recommended)
 
-[1] Install the `ssdeep` dependency for fuzzy hashing.
+GitGot uses [uv](https://docs.astral.sh/uv/) to manage its Python environment
+and dependencies from a lockfile (`uv.lock`), so installs are fast and
+reproducible across machines.
 
-Ubuntu/Debian (or equivalent for your distro):
+[1] Install uv (see the [uv docs](https://docs.astral.sh/uv/getting-started/installation/) for other platforms):
 ```sh
-apt-get install python3-dev libfuzzy-dev ssdeep
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-or, for Mac OSX:
+[2] Clone the repo and sync the locked dependencies:
 ```sh
-brew install ssdeep
+git clone https://github.com/chxsec/GitGot.git
+cd GitGot
+uv sync
 ```
-For Windows or *nix distributions without the `ssdeep` package, please see the [ssdeep installation instructions](https://ssdeep-project.github.io/ssdeep/index.html).
 
-[2] After installing `ssdeep`, install the Python dependencies using `pip`:
-```
+`uv sync` creates a local `.venv` and installs the exact versions pinned in
+`uv.lock`. You then run GitGot with `uv run` (see [Usage](#usage)) - no manual
+virtualenv activation and no `pip install` step required.
+
+### Manual Instructions (pip)
+
+All dependencies are pure-Python (fuzzy hashing uses `ppdeep`), so no system
+packages or compilers are required:
+```sh
+python3 -m venv venv
+source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
@@ -60,14 +73,19 @@ On invocation, `gitgot-docker.sh` will create and mount `logs` and `states` dire
 (See `gitgot-docker.sh` for specific docker commands)
 ## Usage
 
-GitHub requires a token for rate-limiting purposes. Create a [GitHub API token](https://github.com/settings/tokens) with **no permissions/no scope**. This will be equivalent to public GitHub access, but it will allow access to use the GitHub Search API. Set this token at the top of `gitgot.py` as shown below:
+GitHub requires a token for rate-limiting purposes. Create a [GitHub API token](https://github.com/settings/tokens) with **no permissions/no scope**. This will be equivalent to public GitHub access, but it will allow access to use the GitHub Search API.
+
+Provide the token via the `GITHUB_ACCESS_TOKEN` environment variable (recommended, so the secret never lives in the source tree):
+```sh
+export GITHUB_ACCESS_TOKEN="<NO-PERMISSION-GITHUB-TOKEN-HERE>"
+```
+
+Alternatively, you can hardcode it at the top of `gitgot.py`, but take care not to commit it:
 ```sh
 ACCESS_TOKEN = "<NO-PERMISSION-GITHUB-TOKEN-HERE>"
 ```
 
-(Alternatively, this token can be set as the `GITHUB_ACCESS_TOKEN` environment variable)
-
-After adding the token, you are ready to go:
+Once the token is set, you are ready to go. If you installed with uv, prefix each command with `uv run` (for example, `uv run gitgot.py -q example.com`). If you installed manually and activated the venv, use `./gitgot.py` as shown below:
 ```sh
 # Default RegEx list and logfile location (/logs/<query>.log) are used when no others are specified.
 
