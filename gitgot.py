@@ -485,7 +485,12 @@ def main():
         ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN", "")
 
     if not ACCESS_TOKEN or ACCESS_TOKEN == "<NO-PERMISSION-GITHUB-TOKEN-HERE>":
-        print("Github Access token not set")
+        print(
+            "GitHub access token not set. Provide one via:\n"
+            "  flag:    uv run gitgot.py -q <query> --token <TOKEN>  (or -t)\n"
+            "  env var: export GITHUB_ACCESS_TOKEN=<TOKEN>\n"
+            "  file:    set ACCESS_TOKEN at the top of gitgot.py\n"
+            "Create a no-scope token at https://github.com/settings/tokens")
         sys.exit(1)
 
     if args.recover:
