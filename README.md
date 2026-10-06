@@ -75,12 +75,19 @@ On invocation, `gitgot-docker.sh` will create and mount `logs` and `states` dire
 
 GitHub requires a token for rate-limiting purposes. Create a [GitHub API token](https://github.com/settings/tokens) with **no permissions/no scope**. This will be equivalent to public GitHub access, but it will allow access to use the GitHub Search API.
 
-Provide the token via the `GITHUB_ACCESS_TOKEN` environment variable (recommended, so the secret never lives in the source tree):
+The token can be supplied three ways. When more than one is present, the order of precedence is: `--token` flag, then the `GITHUB_ACCESS_TOKEN` environment variable, then the `ACCESS_TOKEN` constant in `gitgot.py`.
+
+1. Environment variable (recommended, so the secret never lives in the source tree):
 ```sh
 export GITHUB_ACCESS_TOKEN="<NO-PERMISSION-GITHUB-TOKEN-HERE>"
 ```
 
-Alternatively, you can hardcode it at the top of `gitgot.py`, but take care not to commit it:
+2. Command-line flag (convenient for one-off runs; note that a token passed this way is visible in your shell history and in the process list):
+```sh
+uv run gitgot.py -q example.com --token "<NO-PERMISSION-GITHUB-TOKEN-HERE>"
+```
+
+3. Hardcoded at the top of `gitgot.py` (take care not to commit it):
 ```sh
 ACCESS_TOKEN = "<NO-PERMISSION-GITHUB-TOKEN-HERE>"
 ```

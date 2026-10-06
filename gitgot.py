@@ -467,15 +467,24 @@ def main():
         "--url",
         help="URL of self-hosted GitHub instance (e.g., https://git.example.com)",
         type=str)
+    parser.add_argument(
+        "-t",
+        "--token",
+        help="GitHub API token (overrides the GITHUB_ACCESS_TOKEN env var "
+             "and the ACCESS_TOKEN set in gitgot.py)",
+        type=str)
     args = parser.parse_args()
 
     state = State()
     state.index = 0
 
-    if ACCESS_TOKEN == "<NO-PERMISSION-GITHUB-TOKEN-HERE>":
+    # Token precedence: --token flag > GITHUB_ACCESS_TOKEN env var > ACCESS_TOKEN constant
+    if args.token:
+        ACCESS_TOKEN = args.token
+    elif ACCESS_TOKEN == "<NO-PERMISSION-GITHUB-TOKEN-HERE>":
         ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN", "")
 
-    if not ACCESS_TOKEN:
+    if not ACCESS_TOKEN or ACCESS_TOKEN == "<NO-PERMISSION-GITHUB-TOKEN-HERE>":
         print("Github Access token not set")
         sys.exit(1)
 
